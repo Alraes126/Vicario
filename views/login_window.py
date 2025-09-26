@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
+from models.user_model import UserModel # Added import
+from controllers.login_controller import LoginController # Added import
 
 class LoginWindow:
     def __init__(self, root, db, notebook):
@@ -9,6 +11,8 @@ class LoginWindow:
         self.root = root
         self.db = db
         self.notebook = notebook
+        self.user_model = UserModel(db) # Initialize UserModel
+        self.controller = LoginController(self, self.user_model) # Initialize Controller
         # Llama a la función para crear todos los widgets de esta ventana
         self.create_widgets()
 
@@ -47,11 +51,19 @@ class LoginWindow:
         ttk.Button(frame, text="Registrar", command=self.open_register).grid(row=4, column=0, columnspan=2, pady=5)
 
     def login(self):
-        # Esta función se ejecuta cuando el usuario presiona el botón "Ingresar"
-        # Implementar la lógica de login
-        messagebox.showinfo("Login", "login complete")
-        # Cambia a la pestaña del panel de usuario (Dashboard)
-        self.notebook.select(2) # Asume que el Dashboard es la tercera pestaña (índice 2)
+        email = self.email.get()
+        password = self.password.get()
+        self.controller.login_user(email, password)
+
+    def on_login_success(self, user): # Corrected syntax
+        messagebox.showinfo("Login", f"¡Bienvenido, {user['nombre']}!")
+        self.email.delete(0, tk.END)
+        self.password.delete(0, tk.END)
+        self.notebook.select(2) # Select Dashboard tab
+        
+        # Pass user data to the dashboard controller
+        if hasattr(self.controller, 'dashboard_controller') and self.controller.dashboard_controller:
+            self.controller.dashboard_controller.set_current_user(user)
 
     def open_register(self):
         # Esta función sirve para cambiar a la pestaña de registro

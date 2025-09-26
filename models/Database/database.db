@@ -1,0 +1,93 @@
+DROP DATABASE casino_vicarios
+
+CREATE DATABASE casino_vicarios;
+USE casino_vicarios;
+
+-- Tabla usuarios (corregida)
+CREATE TABLE usuarios (
+    idcedula INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    tipo_usuario ENUM('superadministrador','administrador','usuario','invitado'),
+    saldo DECIMAL(15,2) DEFAULT 0.00,
+    correo VARCHAR(100) UNIQUE NOT NULL,
+    celular BIGINT,  -- ✔ Corregido: BIGINT en lugar de INT
+    edad INT NOT NULL CHECK (edad >= 18),
+    apodo VARCHAR(50),
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado ENUM('activo','inactivo'),
+    contraseña VARCHAR(100) NOT NULL,
+    ruta_imagen LONGBLOB NULL
+);
+
+INSERT INTO usuarios (nombre, tipo_usuario, saldo, correo, celular, edad, apodo, estado, contraseña) VALUES
+('Carlos Villamizar', 'superadministrador', 0.00, 'carlos.villamizar@casino.com', 3001234567, 45, 'El Jefe', 'activo','1234'),
+('Ana Rodríguez', 'administrador', 0.00, 'ana.rodriguez@casino.com', 3109876543, 35, 'Ani', 'activo','1234'),
+('Juan Pérez', 'usuario', 2000.00, 'juan.perez@email.com', 3205551234, 28, 'Juancho', 'activo','1234'),
+('María García', 'usuario', 1500.50, 'maria.garcia@email.com', 3157778888, 32, 'Mary', 'activo','1234'),
+('Pedro Martínez', 'usuario', 3500.75, 'pedro.martinez@email.com', 3009998888, 41, 'Pete', 'activo','1234');
+
+-- Tabla juegos (corregida)
+CREATE TABLE juegos (
+    idjuego INT AUTO_INCREMENT PRIMARY KEY,
+    monto_minimo DECIMAL(10,2),  -- ✔ Corregido: DECIMAL(10,2)
+    nombre ENUM('tragamonedas','poker (solitario)','ruleta'),
+    estado ENUM('disponible', 'mantenimiento', 'deshabilitado') DEFAULT 'disponible',
+    dificultad ENUM('facil', 'medio', 'dificil') DEFAULT 'medio',
+    probabilidad_ganar DECIMAL(5,4) DEFAULT 0.45,
+    categoria_probabilidad ENUM('muy_baja', 'baja', 'media', 'alta', 'muy_alta')
+        GENERATED ALWAYS AS (
+            CASE
+                WHEN probabilidad_ganar < 0.2 THEN 'muy_baja'
+                WHEN probabilidad_ganar < 0.35 THEN 'baja'
+                WHEN probabilidad_ganar < 0.5 THEN 'media'
+                WHEN probabilidad_ganar < 0.65 THEN 'alta'
+                ELSE 'muy_alta'
+            END
+        ) STORED
+);
+
+INSERT INTO juegos (nombre, monto_minimo, dificultad, probabilidad_ganar, estado) VALUES
+('poker (solitario)', 10.00, 'dificil', 0.55, 'disponible'),
+('tragamonedas', 10.00, 'facil', 0.25, 'disponible'),
+('ruleta', 12.00, 'medio', 0.48, 'disponible');
+
+-- Tabla apuestas (corregida)
+CREATE TABLE apuestas (
+    idapuesta INT AUTO_INCREMENT PRIMARY KEY,
+    idcedula INT NOT NULL,
+    idjuego INT NOT NULL,  -- ✔ Sin "s"
+    FOREIGN KEY (idcedula) REFERENCES usuarios(idcedula) ON DELETE CASCADE,
+    FOREIGN KEY (idjuego) REFERENCES juegos(idjuego) ON DELETE CASCADE,  -- ✔ Referencia correcta
+    monto DECIMAL(20,2),
+    resultado DECIMAL(10,2),
+    ganancia DECIMAL(10,2),
+    fecha_apuesta TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO apuestas (idcedula, idjuego, monto, resultado, ganancia, fecha_apuesta) VALUES
+(3, 1, 100.00, 1, 250.00, '2024-01-15 14:30:00'),
+(3, 2, 50.00, 0, 0.00, '2024-01-15 15:45:00'),
+(4, 3, 200.00, 1, 380.00, '2024-01-15 16:20:00'),
+(5, 1, 150.00, 0, 0.00, '2024-01-15 17:10:00'),
+(4, 2, 75.00, 1, 300.00, '2024-01-15 18:30:00');
+
+-- Tabla transacciones (corregida)
+CREATE TABLE transacciones (
+    idtransaccion INT AUTO_INCREMENT PRIMARY KEY,
+    idcedula INT NOT NULL,
+    FOREIGN KEY (idcedula) REFERENCES usuarios(idcedula) ON DELETE CASCADE,
+    tipo ENUM('deposito', 'retiro', 'apuesta'),  -- ✔ Sin duplicados
+    metododepago ENUM('PSE', 'transferencia de ciertos bancos'),
+    fecha_transaccion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    monto_transaccion DECIMAL(20,2),  -- ✔ Corregido: DECIMAL(20,2)
+    estado ENUM('pendiente', 'completado', 'rechazado')
+);
+
+INSERT INTO transacciones (idcedula, tipo, metododepago, monto_transaccion, estado, fecha_transaccion) VALUES
+(3, 'deposito', 'PSE', 1000.00, 'completado', '2024-01-15 10:00:00'),
+(3, 'deposito', 'transferencia de ciertos bancos', 1000.00, 'completado', '2024-01-15 10:15:00'),
+(4, 'deposito', 'PSE', 2000.00, 'completado', '2024-01-15 11:30:00'),
+(5, 'deposito', 'transferencia de ciertos bancos', 3000.00, 'completado', '2024-01-15 12:45:00'),
+(4, 'retiro', 'PSE', 500.00, 'pendiente', '2024-01-15 19:00:00');
+
+SHOW TABLES
