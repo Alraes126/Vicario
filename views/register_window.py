@@ -1,3 +1,4 @@
+
 import tkinter as tk # Importamos la biblioteca principal para crear interfaces gráficas.
 from tkinter import ttk, messagebox, filedialog # Importamos ttk para widgets con estilos modernos, messagebox para mensajes emergentes, y filedialog para abrir diálogos de selección de archivo.
 from tkcalendar import DateEntry # Importamos DateEntry de tkcalendar para un selector de fechas amigable.
@@ -33,8 +34,8 @@ class RegisterWindow:
         frame.grid(row=0, column=0, sticky="nsew") # Usamos grid para posicionar el marco.
 
         # Configuramos el sistema de grillas para que el marco se expanda correctamente.
-        self.root.grid_row_configure(0, weight=1)
-        self.root.grid_column_configure(0, weight=1)
+        self.root.grid_rowconfigure(0, weight=1)
+        self.root.grid_columnconfigure(0, weight=1)
 
         # Etiqueta de título para la ventana de registro.
         ttk.Label(frame, text="📝 Registro Nuevo Usuario", font=("Arial", 14)).grid(row=0, column=0, columnspan=2, pady=10)

@@ -37,10 +37,7 @@ class TransactionsWindow:
         
         self.create_widgets() # Llamamos a un método para construir todos los elementos de la GUI.
         
-        # Si se pasa un usuario al inicializar la ventana, lo establecemos en el controlador.
-        if user_placeholder:
-            self.controller.set_current_user(user_placeholder)
-        self.load_transactions() # Cargamos las transacciones iniciales del usuario.
+
 
     # Método para crear y organizar todos los widgets (campos de entrada, botones, tablas) de la ventana.
     def create_widgets(self):
@@ -63,9 +60,9 @@ class TransactionsWindow:
         self.deposit_amount_entry = ttk.Entry(deposit_frame, width=20, validate="key", validatecommand=(validate_cmd, '%P'))
         self.deposit_amount_entry.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
 
-        # Etiqueta y menú desplegable para el método de pago.
+        # Etiqueta y menú desplegable para el metodode pago
         ttk.Label(deposit_frame, text="Método de Pago:").grid(row=1, column=0, padx=5, pady=5, sticky="w")
-        payment_methods = ['PSE', 'transferencia de ciertos bancos']
+        payment_methods = ['PSE', 'transferencia de ciertos bancos', 'bancolombia']
         self.payment_method_optionmenu = ttk.OptionMenu(deposit_frame, self.payment_method_var, payment_methods[0], *payment_methods)
         self.payment_method_optionmenu.grid(row=1, column=1, padx=5, pady=5, sticky="ew")
 
@@ -111,7 +108,7 @@ class TransactionsWindow:
         # Botón para volver al Dashboard.
         ttk.Button(frame, text="Volver", command=self.back_to_dashboard).pack(pady=10)
 
-    # Método de validación para asegurar que la entrada sea numérica.
+    # Metodo de validación para asegurar que la entrada sea numerica
     # Se usa con 'validatecommand' en los campos de entrada.
     def validate_numeric_input(self, value_if_allowed):
         if value_if_allowed == "": # Permitimos que el campo esté vacío.

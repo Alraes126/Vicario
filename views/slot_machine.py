@@ -44,9 +44,9 @@ class SlotMachine:
         frame.grid(row=0, column=0, sticky="nsew") # Usamos grid para posicionar el marco.
 
         # Configuramos el sistema de grillas para que el marco se expanda correctamente.
-        self.root.grid_row_configure(0, weight=1)
-        self.root.grid_column_configure(0, weight=1)
-        frame.grid_column_configure(0, weight=1)
+        self.root.grid_rowconfigure(0, weight=1)
+        self.root.grid_columnconfigure(0, weight=1)
+        frame.grid_columnconfigure(0, weight=1)
 
         # Etiqueta de título para la máquina tragamonedas.
         ttk.Label(frame, text="🎰 TRAGAMONEDAS", font=("Arial", 16, "bold")).grid(row=0, column=0, pady=10)

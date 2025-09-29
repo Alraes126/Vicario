@@ -42,10 +42,10 @@ class BetsWindow:
             self.controller.set_current_user(user_placeholder)
         self.load_bets() # Cargamos las apuestas iniciales del usuario.
 
-    # Método para crear y organizar todos los widgets (botones, etiquetas, tablas) de la ventana.
+    # Metodo para crear y organizar todos los widgets (botones, etiquetas, tablas) de la ventana.
     def create_widgets(self):
         frame = ttk.Frame(self.root, padding=20) # Creamos un marco principal para organizar los elementos.
-        frame.pack(fill=tk.BOTH, expand=True) # Empaquetamos el marco para que ocupe todo el espacio.
+        frame.pack(fill=tk.BOTH, expand=True) # Empaquetamos el marco para que ocupe t<odo el espacio.
 
         # Etiqueta de título para la ventana de apuestas.
         ttk.Label(frame, text="🎯 MIS APUESTAS", font=("Arial", 16, "bold")).pack(pady=10)
@@ -96,7 +96,7 @@ class BetsWindow:
         # Botón para volver al Dashboard.
         ttk.Button(frame, text="Volver", command=self.back_to_dashboard).pack(pady=10)
 
-    # Método para mostrar las apuestas en la tabla (Treeview).
+    # Metodo para mostrar las apuestas en la tabla (Treeview).
     def display_bets(self, bets):
         # Limpiamos cualquier entrada existente en la tabla antes de añadir nuevas.
         for item in self.tree.get_children():
@@ -113,12 +113,12 @@ class BetsWindow:
                 bet['fecha_apuesta']
             ))
 
-    # Método para cargar las apuestas del usuario.
+    # Metodo para cargar las apuestas del usuario.
     # Simplemente delega la tarea al controlador.
     def load_bets(self):
         self.controller.load_user_bets()
 
-    # Método que se ejecuta cuando el usuario hace clic en "Aplicar Filtro".
+    # Metodo que se ejecuta cuando el usuario hace clic en "Aplicar Filtro".
     def apply_filter(self):
         # Obtenemos las fechas seleccionadas de los selectores de fecha.
         start_date = self.start_date_entry.get_date()
@@ -131,7 +131,7 @@ class BetsWindow:
         # Le pedimos al controlador que cargue las apuestas con los filtros aplicados.
         self.controller.load_user_bets(start_date_str, end_date_str)
 
-    # Método que se ejecuta cuando el usuario hace clic en "Exportar a PDF".
+    # Metodo que se ejecuta cuando el usuario hace clic en "Exportar a PDF".
     def export_to_pdf(self):
         # Obtenemos las apuestas actualmente mostradas en la tabla.
         # Asumimos que la tabla refleja con precisión los datos filtrados.
@@ -153,7 +153,7 @@ class BetsWindow:
         if file_path: # Si el usuario seleccionó una ruta...
             self.controller.export_bets_to_pdf(bets_to_export, file_path) # Le pedimos al controlador que exporte.
 
-    # Método que se ejecuta cuando el usuario hace clic en "Exportar a Excel".
+    # Metodo que se ejecuta cuando el usuario hace clic en "Exportar a Excel".
     def export_to_excel(self):
         # Obtenemos las apuestas actualmente mostradas en la tabla.
         bets_to_export = []

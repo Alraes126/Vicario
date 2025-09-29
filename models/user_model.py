@@ -85,14 +85,3 @@ class UserModel:
         query = "SELECT idcedula, nombre, tipo_usuario, saldo, correo, celular, edad, apodo, fecha_registro, estado, ruta_imagen FROM usuarios WHERE correo = %s AND contraseña = %s"
         result = self.db.execute_query(query, (email, password)) # Ejecutamos la consulta.
         return result[0] if result else None # Devuelve el primer usuario encontrado o None.
-
-    # Método para obtener un usuario por su ID de cédula.
-    def get_user_by_id(self, user_id):
-        query = "SELECT idcedula, nombre, tipo_usuario, saldo, correo, celular, edad, apodo, fecha_registro, estado, ruta_imagen FROM usuarios WHERE idcedula = %s"
-        result = self.db.execute_query(query, (user_id,)) # Ejecutamos la consulta.
-        return result[0] if result else None # Devuelve el primer usuario encontrado o None.
-
-    # Método para actualizar el saldo de un usuario específico.
-    def update_user_balance(self, user_id, new_balance):
-        query = "UPDATE usuarios SET saldo = %s WHERE idcedula = %s"
-        return self.db.execute_update(query, (new_balance, user_id)) # Ejecuta la consulta de actualización.
